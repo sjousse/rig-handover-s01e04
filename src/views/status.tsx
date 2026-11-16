@@ -1,6 +1,9 @@
 import type { Status } from '../status.js';
+import type { DigestNightResult } from '../digest/types.js';
 
-export function StatusBoard({ status }: { status: Status }) {
+type NightSummary = { night: string; digest: DigestNightResult };
+
+export function StatusBoard({ status, nights }: { status: Status; nights: NightSummary[] }) {
   return (
     <>
       <h1>status</h1>
@@ -19,8 +22,12 @@ export function StatusBoard({ status }: { status: Status }) {
         <p class="mute">nothing in runs/</p>
       ) : (
         <ul>
-          {status.nights.map((n) => (
-            <li>{n}</li>
+          {nights.map(({ night, digest }) => (
+            <li>
+              <a href={`/digest/${night}`}>{night}</a>
+              {' · '}
+              ok {digest.eventCounts.ok} · retry {digest.eventCounts.retry} · fail {digest.eventCounts.fail}
+            </li>
           ))}
         </ul>
       )}
